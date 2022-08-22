@@ -8,15 +8,17 @@ branding:
 
 inputs:
   ref-name:
-    description: Just the value of `${{ github.ref_name }}`
+    description: Just the value of `github.ref_name`
+    default: ${{ github.ref_name }}
     required: true
   ref:
     description: Full ref path for the branch/tag information
+    default: ${{ github.ref }}
     required: true
   commit:
     description: Most recent commit
     required: false
-    default: "0000000000000000000000000000000000000000"
+    default: ${{ github.sha }}
   bucket-name:
     description: Google cloud bucket name, optional
     required: false
