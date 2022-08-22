@@ -1,0 +1,27 @@
+name: Livepeer - branch manifest
+description: Generate branch manifest file for livepeer builds strategy
+author: hjpotter92
+
+branding:
+  icon: code
+  color: green
+
+inputs:
+  ref-name:
+    description: Just the value of `${{ github.ref_name }}`
+    required: true
+  ref:
+    description: Full ref path for the branch/tag information
+    required: true
+  commit:
+    description: Most recent commit
+    required: false
+    default: "0000000000000000000000000000000000000000"
+  bucket-name:
+    description: Google cloud bucket name, optional
+    required: false
+    default: build.livepeer.live
+
+runs:
+  using: docker
+  image: Dockerfile
