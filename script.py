@@ -10,9 +10,13 @@ import pathlib
 import json
 
 
+def clean_branch_name(branch_name: str) -> str:
+    return branch_name.replace("/", "-")
+
+
 def main():
     """main entrypoint for the script."""
-    ref_name = str(os.getenv("INPUT_REF_NAME"))
+    ref_name = clean_branch_name(str(os.getenv("INPUT_REF-NAME")))
     manifest = {
         "ref": os.getenv("INPUT_REF"),
         "branch": ref_name,
