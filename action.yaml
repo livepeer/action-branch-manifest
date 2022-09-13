@@ -13,13 +13,13 @@ inputs:
     required: false
   ref:
     description: Full ref path for the branch/tag information
-    default: ${{ github.ref }}
+    default: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
     required: false
   commit:
     description: Most recent commit
     default: ${{ github.sha }}
     required: false
-  bucket-name:
+  bucket-domain:
     description: Google cloud bucket name, optional
     default: build.livepeer.live
     required: false
