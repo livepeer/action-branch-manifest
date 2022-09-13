@@ -73,10 +73,13 @@ function run() {
             const projectName = core.getInput("project-name");
             const architectures = getInputList("architecture");
             const platforms = getInputList("platform");
-            core.debug(`Received refName=${branch} ref=${ref} commit=${commit} bucketDomain=${bucketDomain}`);
+            core.info(`Received refName=${branch} ref=${ref} commit=${commit} bucketDomain=${bucketDomain}`);
+            core.info(`Received projectName=${projectName}`);
+            console.log(`Received refName=${branch} ref=${ref} commit=${commit} bucketDomain=${bucketDomain}`);
+            console.log(`Received projectName=${projectName}`);
             const manifestFile = `${cleanRefName}.json`;
             const repository = github.context.repo.repo;
-            core.debug(`Reading repository=${repository}`);
+            core.info(`Reading repository=${repository}`);
             let manifestData = {
                 ref,
                 branch,
@@ -85,6 +88,8 @@ function run() {
                 builds: new Map(),
             };
             if (projectName !== "") {
+                core.info(`Generating manifest for platform=${JSON.stringify(platforms)} architecture=${JSON.stringify(architectures)}`);
+                console.log(`Generating manifest for platform=${JSON.stringify(platforms)} architecture=${JSON.stringify(architectures)}`);
                 for (const platform of platforms) {
                     let suffix = getSuffix(platform);
                     for (const arch of architectures) {
