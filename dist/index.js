@@ -82,8 +82,8 @@ function run() {
                 ref,
                 branch,
                 commit,
-                srcFilenames: new Map(),
-                builds: new Map(),
+                srcFilenames: {},
+                builds: {},
             };
             if (projectName !== "") {
                 core.info(`Generating manifest for platform=${JSON.stringify(platforms)} architecture=${JSON.stringify(architectures)}`);
@@ -94,11 +94,11 @@ function run() {
                     for (const arch of architectures) {
                         core.debug(`arch=${arch}`);
                         let key = `${platform}-${arch}`;
-                        let name = `livepeer-${projectName}-${key}`;
-                        let url = `https://${bucketDomain}/${projectName}/${commit}/${name}.${suffix}`;
+                        let name = `livepeer-${projectName}-${key}.${suffix}`;
+                        let url = `https://${bucketDomain}/${projectName}/${commit}/${name}`;
                         core.info(`key=${key} name=${name} url=${url}`);
-                        manifestData.srcFilenames.set(key, `${name}.${suffix}`);
-                        manifestData.builds.set(key, url);
+                        manifestData.srcFilenames[key] = `${name}`;
+                        manifestData.builds[key] = url;
                         core.debug(JSON.stringify(manifestData.builds));
                     }
                 }

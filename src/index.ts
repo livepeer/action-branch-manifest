@@ -6,8 +6,8 @@ type ManifestData = {
   ref: string;
   commit: string;
   branch: string;
-  builds: Map<string, string>;
-  srcFilenames: Map<string, string>;
+  builds: any;
+  srcFilenames: any;
 };
 
 function cleanBranchName(name: string): string {
@@ -16,7 +16,7 @@ function cleanBranchName(name: string): string {
 
 function getInputList(name: string): string[] {
   let result: string[] = [];
-  const values = core.getInput(name);
+  const values: string = core.getInput(name);
   values.split(",").forEach((value) => result.push(value.trim()));
   return result;
 }
@@ -57,8 +57,8 @@ async function run(): Promise<void> {
       ref,
       branch,
       commit,
-      srcFilenames: new Map<string, string>(),
-      builds: new Map<string, string>(),
+      srcFilenames: {},
+      builds: {},
     };
 
     if (projectName !== "") {
@@ -75,11 +75,11 @@ async function run(): Promise<void> {
         for (const arch of architectures) {
           core.debug(`arch=${arch}`);
           let key = `${platform}-${arch}`;
-          let name = `livepeer-${projectName}-${key}`;
-          let url = `https://${bucketDomain}/${projectName}/${commit}/${name}.${suffix}`;
+          let name = `livepeer-${projectName}-${key}.${suffix}`;
+          let url = `https://${bucketDomain}/${projectName}/${commit}/${name}`;
           core.info(`key=${key} name=${name} url=${url}`);
-          manifestData.srcFilenames.set(key, `${name}.${suffix}`);
-          manifestData.builds.set(key, url);
+          manifestData.srcFilenames[key] = `${name}`;
+          manifestData.builds[key] = url;
           core.debug(JSON.stringify(manifestData.builds));
         }
       }
