@@ -9,11 +9,11 @@ branding:
 inputs:
   ref-name:
     description: Just the value of `github.ref_name`
-    default: ${{ github.ref_name }}
+    default: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
     required: false
   ref:
     description: Full ref path for the branch/tag information
-    default: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+    default: ${{ github.ref }}
     required: false
   commit:
     description: Most recent commit
@@ -23,7 +23,6 @@ inputs:
     description: Google cloud bucket name, optional
     default: build.livepeer.live
     required: false
-
   project-name:
     description: Project name, to be used as gcp bucket root directory
     required: false
