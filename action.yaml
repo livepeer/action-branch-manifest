@@ -10,20 +10,36 @@ inputs:
   ref-name:
     description: Just the value of `github.ref_name`
     default: ${{ github.ref_name }}
-    required: true
+    required: false
   ref:
     description: Full ref path for the branch/tag information
     default: ${{ github.ref }}
-    required: true
+    required: false
   commit:
     description: Most recent commit
-    required: false
     default: ${{ github.sha }}
+    required: false
   bucket-name:
     description: Google cloud bucket name, optional
-    required: false
     default: build.livepeer.live
+    required: false
+
+  project-name:
+    description: Project name, to be used as gcp bucket root directory
+    required: false
+  platform:
+    description: Supported platforms names. Muliple values can be separated by commas
+    default: linux, darwin, windows
+    required: false
+  architecture:
+    description: Supported architectures, comma separated
+    default: arm64,amd64
+    required: false
+
+outputs:
+  manifest-file:
+    description: The file created after branch name filter etc.
 
 runs:
-  using: docker
-  image: Dockerfile
+  using: node16
+  main: 'dist/index.js'
