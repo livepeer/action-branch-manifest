@@ -75,8 +75,6 @@ function run() {
             const platforms = getInputList("platform");
             core.info(`Received refName=${branch} ref=${ref} commit=${commit} bucketDomain=${bucketDomain}`);
             core.info(`Received projectName=${projectName}`);
-            console.log(`Received refName=${branch} ref=${ref} commit=${commit} bucketDomain=${bucketDomain}`);
-            console.log(`Received projectName=${projectName}`);
             const manifestFile = `${cleanRefName}.json`;
             const repository = github.context.repo.repo;
             core.info(`Reading repository=${repository}`);
@@ -89,17 +87,22 @@ function run() {
             };
             if (projectName !== "") {
                 core.info(`Generating manifest for platform=${JSON.stringify(platforms)} architecture=${JSON.stringify(architectures)}`);
-                console.log(`Generating manifest for platform=${JSON.stringify(platforms)} architecture=${JSON.stringify(architectures)}`);
+                core.startGroup("Platform manifest data");
                 for (const platform of platforms) {
                     let suffix = getSuffix(platform);
+                    core.debug(`platform=${platform} suffix=${suffix}`);
                     for (const arch of architectures) {
+                        core.debug(`arch=${arch}`);
                         let key = `${platform}-${arch}`;
                         let name = `livepeer-${projectName}-${key}`;
                         let url = `https://${bucketDomain}/${projectName}/${commit}/${name}.${suffix}`;
+                        core.info(`key=${key} name=${name} url=${url}`);
                         manifestData.srcFilenames.set(key, `${name}.${suffix}`);
                         manifestData.builds.set(key, url);
+                        core.debug(JSON.stringify(manifestData.builds));
                     }
                 }
+                core.endGroup();
             }
             core.debug(`Generated manifestFile=${manifestFile}`);
             (0, fs_1.writeFileSync)(manifestFile, JSON.stringify(manifestData));
