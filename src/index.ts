@@ -48,6 +48,10 @@ async function run(): Promise<void> {
       `Received refName=${branch} ref=${ref} commit=${commit} bucketDomain=${bucketDomain}`
     );
     core.info(`Received projectName=${projectName}`);
+    console.log(
+      `Received refName=${branch} ref=${ref} commit=${commit} bucketDomain=${bucketDomain}`
+    );
+    console.log(`Received projectName=${projectName}`);
 
     const manifestFile = `${cleanRefName}.json`;
     const repository = github.context.repo.repo;
@@ -63,6 +67,11 @@ async function run(): Promise<void> {
 
     if (projectName !== "") {
       core.info(
+        `Generating manifest for platform=${JSON.stringify(
+          platforms
+        )} architecture=${JSON.stringify(architectures)}`
+      );
+      console.log(
         `Generating manifest for platform=${JSON.stringify(
           platforms
         )} architecture=${JSON.stringify(architectures)}`
