@@ -44,13 +44,14 @@ async function run(): Promise<void> {
     const architectures = getInputList("architecture");
     const platforms = getInputList("platform");
 
-    core.debug(
+    core.info(
       `Received refName=${branch} ref=${ref} commit=${commit} bucketDomain=${bucketDomain}`
     );
+    core.info(`Received projectName=${projectName}`);
 
     const manifestFile = `${cleanRefName}.json`;
     const repository = github.context.repo.repo;
-    core.debug(`Reading repository=${repository}`);
+    core.info(`Reading repository=${repository}`);
 
     let manifestData: ManifestData = {
       ref,
@@ -61,6 +62,11 @@ async function run(): Promise<void> {
     };
 
     if (projectName !== "") {
+      core.info(
+        `Generating manifest for platform=${JSON.stringify(
+          platforms
+        )} architecture=${JSON.stringify(architectures)}`
+      );
       for (const platform of platforms) {
         let suffix = getSuffix(platform);
         for (const arch of architectures) {
