@@ -4,8 +4,50 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "**.md"
 
 jobs:
+  publish:
+    name: Publish compiled/transpiled scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          # Check https://github.com/livepeer/go-livepeer/pull/1891
+          # for ref value discussion
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up node
+        id: node
+        uses: actions/setup-node@v3
+        with:
+          cache: yarn
+          cache-dependency-path: yarn.lock
+          node-version-file: .tool-versions
+
+      - name: Install dependencies
+        if: steps.node.outputs.cache-hit != 'true'
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: Build distributable package
+        run: |
+          yarn build
+          yarn package
+
+      - name: Commit and push changes
+        id: branch-commit
+        continue-on-error: true
+        uses: devops-infra/action-commit-push@v0.9.0
+        with:
+          github_token: ${{ github.token }}
+          target_branch: main
+          commit_prefix: "[AUTO-COMMIT] "
+          commit_message: "Update `dist/`"
+          force: true
+
   release:
     name: Make a latest release of the action
     runs-on: ubuntu-latest
