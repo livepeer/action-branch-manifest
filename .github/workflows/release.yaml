@@ -43,14 +43,29 @@ jobs:
         uses: devops-infra/action-commit-push@v0.9.0
         with:
           github_token: ${{ github.token }}
-          target_branch: main
+          target_branch: dist
           commit_prefix: "[AUTO-COMMIT] "
           commit_message: "Update `dist/`"
           force: true
 
+      - name: Create pull request
+        uses: devops-infra/action-pull-request@v0.5.0
+        with:
+          github_token: ${{ github.token }}
+          source_branch: ${{ steps.branch-commit.outputs.branch_name }}
+          target_branch: main
+          title: "[BOT] Update `dist/` with changes"
+          body: "**Automated pull request**"
+          assignee: hjpotter92
+          label: enhancement
+          get_diff: true
+          allow_no_diff: false
+
   release:
     name: Make a latest release of the action
     runs-on: ubuntu-latest
+    needs:
+      - publish
     steps:
       - name: Check out code
         uses: actions/checkout@v3

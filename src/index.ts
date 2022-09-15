@@ -11,7 +11,7 @@ type ManifestData = {
 };
 
 function cleanBranchName(name: string): string {
-  return name.replace(/\//g, "_");
+  return name.replace(/\//g, "-");
 }
 
 function getInputList(name: string): string[] {
