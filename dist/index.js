@@ -82,6 +82,7 @@ function run() {
             const repository = github.context.repo.repo;
             core.info(`Reading repository=${repository}`);
             if (bucketKey === "") {
+                core.debug("`bucket-key` not found. Using `project-name` value instead.");
                 bucketKey = projectName;
             }
             let manifestData = {
