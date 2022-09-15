@@ -40,7 +40,11 @@ async function run(): Promise<void> {
     const ref = core.getInput("ref");
     const commit = core.getInput("commit");
     const bucketDomain = core.getInput("bucket-domain");
+    let bucketKey = core.getInput("bucket-key");
     const projectName = core.getInput("project-name");
+    const usePrefix = core.getBooleanInput("use-prefix");
+    const prefix = core.getInput("prefix");
+
     const architectures = getInputList("architecture");
     const platforms = getInputList("platform");
 
@@ -52,6 +56,11 @@ async function run(): Promise<void> {
     const manifestFile = `${cleanRefName}.json`;
     const repository = github.context.repo.repo;
     core.info(`Reading repository=${repository}`);
+
+    if (bucketKey === "") {
+      core.debug("`bucket-key` not found. Using `project-name` value instead.");
+      bucketKey = projectName;
+    }
 
     let manifestData: ManifestData = {
       ref,
@@ -75,8 +84,11 @@ async function run(): Promise<void> {
         for (const arch of architectures) {
           core.debug(`arch=${arch}`);
           let key = `${platform}-${arch}`;
-          let name = `livepeer-${projectName}-${key}.${suffix}`;
-          let url = `https://${bucketDomain}/${projectName}/${commit}/${name}`;
+          let name = `${projectName}-${key}.${suffix}`;
+          if (usePrefix) {
+            name = `${prefix}-${name}`;
+          }
+          let url = `https://${bucketDomain}/${bucketKey}/${commit}/${name}`;
           core.info(`key=${key} name=${name} url=${url}`);
           manifestData.srcFilenames[key] = `${name}`;
           manifestData.builds[key] = url;

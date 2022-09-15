@@ -23,6 +23,17 @@ inputs:
     description: Google cloud bucket name, optional
     default: build.livepeer.live
     required: false
+  bucket-key:
+    description: Key inside the `bucket-domain` for generating references
+    required: false
+  use-prefix:
+    description: Use prefix when generating archive names
+    default: 'true'
+    required: false
+  prefix:
+    description: Custom prefix to use for archive naming based on project information
+    default: livepeer
+    required: false
   project-name:
     description: Project name, to be used as gcp bucket root directory
     required: false
