@@ -61,7 +61,7 @@ jobs:
           node-version-file: .tool-versions
 
       - name: Install dependencies
-        if: steps.node.outputs.cache-hit != 'true'
+        # if: steps.node.outputs.cache-hit != 'true'
         run: yarn install --immutable --immutable-cache --check-cache
 
       # Initializes the CodeQL tools for scanning.
