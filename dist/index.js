@@ -43,7 +43,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const fs_1 = __nccwpck_require__(7147);
 function cleanBranchName(name) {
-    return name.replace(/\//g, "_");
+    return name.replace(/\//g, "-");
 }
 function getInputList(name) {
     let result = [];
