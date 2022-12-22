@@ -10,6 +10,13 @@ type ManifestData = {
   srcFilenames: any;
 };
 
+type OutputData = {
+  "manifest-file": string;
+  "release-name": string;
+  "bucket-key": string;
+  "project-name": string;
+};
+
 function cleanBranchName(name: string): string {
   return name.replace(/\//g, "-");
 }
@@ -30,6 +37,12 @@ function getSuffix(platform: string): string {
       return "zip";
     default:
       return "";
+  }
+}
+
+function dumpOutput(data: OutputData): void {
+  for (const [key, value] of Object.entries(data)) {
+    core.setOutput(key, value);
   }
 }
 
@@ -100,6 +113,12 @@ async function run(): Promise<void> {
 
     core.debug(`Generated manifestFile=${manifestFile}`);
     writeFileSync(manifestFile, JSON.stringify(manifestData));
+    dumpOutput({
+      "manifest-file": manifestFile,
+      "project-name": projectName,
+      "release-name": commit,
+      "bucket-key": bucketKey,
+    });
     core.setOutput("manifest-file", manifestFile);
   } catch (err) {
     if (err instanceof Error) core.setFailed(err.message);

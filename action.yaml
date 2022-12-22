@@ -17,7 +17,7 @@ inputs:
     required: false
   commit:
     description: Most recent commit
-    default: ${{ (github.ref_type == 'tag' && github.ref_name) || github.sha }}
+    default: ${{ (github.ref_type == 'tag' && github.ref_name) || (github.event.pull_request.head.sha || github.sha) }}
     required: false
   bucket-domain:
     description: Google cloud bucket name, optional
@@ -49,6 +49,12 @@ inputs:
 outputs:
   manifest-file:
     description: The file created after branch name filter etc.
+  release-name:
+    description: Name of this release (tag if present, commit otherwise)
+  bucket-key:
+    description: Key inside the `bucket-domain` for generating references
+  project-name:
+    description: Project name, to be used as gcp bucket root directory
 
 runs:
   using: node16
