@@ -102,9 +102,8 @@ function run() {
                 core.startGroup("Platform manifest data");
                 for (const platform of platforms) {
                     let suffix = getSuffix(platform);
-                    core.debug(`platform=${platform} suffix=${suffix}`);
                     for (const arch of architectures) {
-                        core.debug(`arch=${arch}`);
+                        core.debug(`platform=${platform} suffix=${suffix} arch=${arch}`);
                         let key = `${platform}-${arch}`;
                         let name = `${projectName}-${key}.${suffix}`;
                         if (usePrefix) {
@@ -127,7 +126,6 @@ function run() {
                 "release-name": commit,
                 "bucket-key": bucketKey,
             });
-            core.setOutput("manifest-file", manifestFile);
         }
         catch (err) {
             if (err instanceof Error)
